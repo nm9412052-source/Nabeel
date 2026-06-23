@@ -3,114 +3,164 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tic-Tac-Toe</title>
+  <title>Chess</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-  <div class="background-grid" aria-hidden="true"></div>
+<div class="app">
 
-  <main class="app">
-
-    <header class="header">
-      <h1 class="logo">
-        <span class="logo-x">X</span>
-        <span class="logo-sep">·</span>
-        <span class="logo-o">O</span>
-      </h1>
-      <p class="tagline">Tic-Tac-Toe</p>
-    </header>
-
-    <!-- Mode Selection -->
-    <section class="mode-select" id="modeSelect">
-      <h2 class="section-title">Choose Mode</h2>
-      <div class="mode-cards">
-        <button class="mode-card" id="btnTwoPlayer">
-          <span class="mode-icon">👥</span>
-          <span class="mode-name">2 Players</span>
-          <span class="mode-desc">Play with a friend</span>
-        </button>
-        <button class="mode-card" id="btnVsAI">
-          <span class="mode-icon">🤖</span>
-          <span class="mode-name">vs AI</span>
-          <span class="mode-desc">Challenge the computer</span>
-        </button>
+  <!-- ── Left Panel ──────────────────────────────────────── -->
+  <aside class="side-panel left-panel">
+    <div class="player-card" id="playerBlack">
+      <div class="player-avatar black-avatar">♟</div>
+      <div class="player-info">
+        <span class="player-name">Black</span>
+        <span class="player-status" id="blackStatus">Waiting</span>
       </div>
-    </section>
+      <div class="captured-pieces" id="capturedByWhite"></div>
+      <div class="material-score" id="materialWhite"></div>
+    </div>
 
-    <!-- Difficulty (shown only for vs AI) -->
-    <section class="difficulty-select hidden" id="difficultySelect">
-      <h2 class="section-title">AI Difficulty</h2>
-      <div class="difficulty-btns">
-        <button class="diff-btn" data-diff="easy">Easy</button>
-        <button class="diff-btn active" data-diff="medium">Medium</button>
-        <button class="diff-btn" data-diff="hard">Hard</button>
+    <div class="clock-display" id="clockBlack">
+      <span class="clock-time" id="blackTime">10:00</span>
+      <span class="clock-label">Black</span>
+    </div>
+
+    <div class="move-history-box">
+      <div class="box-title">Move History</div>
+      <div class="move-history" id="moveHistory"></div>
+    </div>
+
+    <div class="clock-display" id="clockWhite">
+      <span class="clock-time" id="whiteTime">10:00</span>
+      <span class="clock-label">White</span>
+    </div>
+
+    <div class="player-card" id="playerWhite">
+      <div class="player-avatar white-avatar">♙</div>
+      <div class="player-info">
+        <span class="player-name">White</span>
+        <span class="player-status" id="whiteStatus">Your Turn</span>
       </div>
-    </section>
+      <div class="captured-pieces" id="capturedByBlack"></div>
+      <div class="material-score" id="materialBlack"></div>
+    </div>
+  </aside>
 
-    <!-- Game Arena -->
-    <section class="game-arena hidden" id="gameArena">
-
-      <!-- Score Bar -->
-      <div class="scoreboard">
-        <div class="score-block" id="scoreX">
-          <span class="score-label">X</span>
-          <span class="score-value" id="scoreXVal">0</span>
-          <span class="score-name" id="nameX">Player 1</span>
-        </div>
-        <div class="score-block draws">
-          <span class="score-label">Draws</span>
-          <span class="score-value" id="scoreDrawVal">0</span>
-        </div>
-        <div class="score-block" id="scoreO">
-          <span class="score-label">O</span>
-          <span class="score-value" id="scoreOVal">0</span>
-          <span class="score-name" id="nameO">Player 2</span>
-        </div>
+  <!-- ── Center: Board ────────────────────────────────────── -->
+  <main class="board-section">
+    <div class="board-wrapper">
+      <div class="rank-labels left-labels" id="rankLabelsLeft"></div>
+      <div class="board-container">
+        <div class="file-labels top-labels" id="fileLabelsTop"></div>
+        <div class="board" id="board"></div>
+        <div class="file-labels bottom-labels" id="fileLabelsBottom"></div>
       </div>
+      <div class="rank-labels right-labels" id="rankLabelsRight"></div>
+    </div>
 
-      <!-- Turn Indicator -->
-      <div class="turn-indicator" id="turnIndicator">
-        <span class="turn-dot" id="turnDot"></span>
-        <span id="turnText">Player 1's turn (X)</span>
-      </div>
+    <!-- Status Bar -->
+    <div class="status-bar" id="statusBar">
+      <span id="statusText">White to move</span>
+    </div>
 
-      <!-- Board -->
-      <div class="board" id="board" role="grid" aria-label="Tic-Tac-Toe board">
-        <button class="cell" data-index="0" aria-label="Cell 1"></button>
-        <button class="cell" data-index="1" aria-label="Cell 2"></button>
-        <button class="cell" data-index="2" aria-label="Cell 3"></button>
-        <button class="cell" data-index="3" aria-label="Cell 4"></button>
-        <button class="cell" data-index="4" aria-label="Cell 5"></button>
-        <button class="cell" data-index="5" aria-label="Cell 6"></button>
-        <button class="cell" data-index="6" aria-label="Cell 7"></button>
-        <button class="cell" data-index="7" aria-label="Cell 8"></button>
-        <button class="cell" data-index="8" aria-label="Cell 9"></button>
-      </div>
+    <!-- Controls -->
+    <div class="controls">
+      <button class="ctrl-btn" id="btnFlip" title="Flip Board">⇅ Flip</button>
+      <button class="ctrl-btn" id="btnUndo" title="Undo Move">↩ Undo</button>
+      <button class="ctrl-btn primary" id="btnNewGame">⊕ New Game</button>
+    </div>
+  </main>
 
-      <!-- Action Buttons -->
-      <div class="action-btns">
-        <button class="btn btn-secondary" id="btnNewRound">New Round</button>
-        <button class="btn btn-ghost" id="btnChangeMode">Change Mode</button>
-      </div>
+  <!-- ── Right Panel ──────────────────────────────────────── -->
+  <aside class="side-panel right-panel">
+    <div class="panel-box">
+      <div class="box-title">Game Settings</div>
+      <label class="setting-row">
+        <span>Mode</span>
+        <select id="modeSelect">
+          <option value="two">2 Players</option>
+          <option value="ai">vs AI</option>
+        </select>
+      </label>
+      <label class="setting-row hidden" id="aiColorRow">
+        <span>You play as</span>
+        <select id="aiColorSelect">
+          <option value="white">White</option>
+          <option value="black">Black</option>
+        </select>
+      </label>
+      <label class="setting-row hidden" id="diffRow">
+        <span>AI Difficulty</span>
+        <select id="diffSelect">
+          <option value="1">Beginner</option>
+          <option value="2" selected>Intermediate</option>
+          <option value="3">Advanced</option>
+        </select>
+      </label>
+      <label class="setting-row">
+        <span>Time Control</span>
+        <select id="timeSelect">
+          <option value="0">No Clock</option>
+          <option value="3">3 min</option>
+          <option value="5">5 min</option>
+          <option value="10" selected>10 min</option>
+          <option value="15">15 min</option>
+        </select>
+      </label>
+      <button class="ctrl-btn primary full-width" id="btnApplySettings">Apply & New Game</button>
+    </div>
 
-    </section>
-
-    <!-- Result Modal -->
-    <div class="modal-backdrop hidden" id="modalBackdrop">
-      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <div class="modal-symbol" id="modalSymbol"></div>
-        <h2 class="modal-title" id="modalTitle">Game Over</h2>
-        <p class="modal-sub" id="modalSub"></p>
-        <div class="modal-btns">
-          <button class="btn btn-primary" id="btnPlayAgain">Play Again</button>
-          <button class="btn btn-ghost" id="btnModalChangeMode">Change Mode</button>
-        </div>
+    <div class="panel-box">
+      <div class="box-title">Legend</div>
+      <div class="legend">
+        <div class="legend-item"><span class="dot selected"></span> Selected</div>
+        <div class="legend-item"><span class="dot legal"></span> Legal Move</div>
+        <div class="legend-item"><span class="dot capture"></span> Capture</div>
+        <div class="legend-item"><span class="dot check"></span> Check</div>
+        <div class="legend-item"><span class="dot last-move"></span> Last Move</div>
       </div>
     </div>
 
-  </main>
+    <div class="panel-box">
+      <div class="box-title">Rules</div>
+      <ul class="rules-list">
+        <li>✓ All standard piece moves</li>
+        <li>✓ Check &amp; Checkmate</li>
+        <li>✓ Stalemate (draw)</li>
+        <li>✓ Castling (kingside &amp; queenside)</li>
+        <li>✓ En passant</li>
+        <li>✓ Pawn promotion</li>
+        <li>✓ 50-move rule (draw)</li>
+        <li>✓ Threefold repetition</li>
+      </ul>
+    </div>
+  </aside>
 
-  <script src="js/game.js"></script>
+</div>
+
+<!-- Promotion Modal -->
+<div class="modal-backdrop hidden" id="promotionModal">
+  <div class="modal promo-modal">
+    <h2 class="modal-title">Pawn Promotion</h2>
+    <p class="modal-sub">Choose a piece</p>
+    <div class="promo-choices" id="promoChoices"></div>
+  </div>
+</div>
+
+<!-- Game Over Modal -->
+<div class="modal-backdrop hidden" id="gameOverModal">
+  <div class="modal">
+    <div class="modal-icon" id="gameOverIcon"></div>
+    <h2 class="modal-title" id="gameOverTitle"></h2>
+    <p class="modal-sub" id="gameOverSub"></p>
+    <div class="modal-btns">
+      <button class="ctrl-btn primary" id="btnModalNewGame">New Game</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/chess.js"></script>
 </body>
 </html>
